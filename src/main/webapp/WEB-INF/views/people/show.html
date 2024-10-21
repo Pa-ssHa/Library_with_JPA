@@ -21,14 +21,16 @@
     <hr/>
     <b>Книги:</b>
     <br/>
-    <table th:each="book : ${books}">
-        <tr th:text="${book.getTitle()+ ', ' + book.getAuthor()+ ', '+ book.getYear()}">book</tr>
+    <table>
+        <tr th:each="book : ${books}"
+            th:style="${#lists.contains(overdueBooks, book) ? 'color: red;' : 'color: black;'}">
+            <td th:text="${book.getTitle() + '; '}"></td>
+            <td th:text="${book.getAuthor() + '; '}"></td>
+            <td th:text="${book.getYear()}"></td>
+        </tr>
     </table>
     <hr/>
 </div>
-
-
-
 
 
 <br/>

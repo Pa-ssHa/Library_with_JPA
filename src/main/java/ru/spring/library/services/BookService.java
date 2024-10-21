@@ -1,7 +1,5 @@
 package ru.spring.library.services;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +7,7 @@ import ru.spring.library.models.Book;
 import ru.spring.library.models.Person;
 import ru.spring.library.repositories.BookRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,9 +16,6 @@ import java.util.Optional;
 public class BookService {
 
     private final BookRepository bookrepository;
-
-
-
     @Autowired
     public BookService(BookRepository bookrepository) {
         this.bookrepository = bookrepository;
@@ -29,10 +25,34 @@ public class BookService {
         return bookrepository.findAll();
     }
 
+    public List<Book> findCountOfBookOnPage(int page, int books_per_page){
+        List<Book> allBook = bookrepository.findAll();
+        int difference = 0;
+        List<Book> selectedBooks;
+        if (page*books_per_page > allBook.size() && page*books_per_page - allBook.size() < books_per_page )
+            difference = page*books_per_page - allBook.size();
+        else if (page*books_per_page - allBook.size() >= books_per_page || page == 0 || books_per_page ==0) {
+            selectedBooks = null;
+            return selectedBooks;
+        }
+        selectedBooks = allBook.subList(books_per_page * (page - 1),
+                books_per_page * page - difference);
+
+        return selectedBooks;
+    }
+
+    public List<Book> sortByYear(){
+        List<Book> booksSort = bookrepository.findAll();
+        Collections.sort(booksSort, Book.sortByYear);
+        return  booksSort;
+    }
+
     public Book findOne(int id){
         Optional<Book> foundBook = bookrepository.findById(id);
         return  foundBook.orElse(null);
     }
+
+
 
     @Transactional
     public void save(Book book){
@@ -51,8 +71,8 @@ public class BookService {
         bookrepository.deleteById(id);
     }
 
-    public Optional<Book> findByTitleStartingWith(String startingWith){
-        Optional<Book> foundBook =bookrepository.findByTitleStartingWith(startingWith);
+    public List<Book> findByTitleContainingIgnoreCase(String startingWith){
+        List<Book> foundBook =bookrepository.findByTitleContainingIgnoreCase(startingWith);
 
         return foundBook;
     }
@@ -63,6 +83,8 @@ public class BookService {
         Optional<Person> foundOwner = Optional.ofNullable(book.getOwner());
         return foundOwner;
     }
+
+
 
 //    @Transactional
 //    public void assign(int id, Person selectedPerson){
@@ -77,7 +99,7 @@ public class BookService {
         Book book = bookrepository.findById(id).orElse(null);
         if (book != null) {
             book.setOwner(selectedPerson);
-            bookrepository.save(book);  // обновляем через JPA, а не через SessionFactory
+            bookrepository.save(book);
         }
     }
 
@@ -94,7 +116,7 @@ public class BookService {
         Book book = bookrepository.findById(id).orElse(null);
         if (book != null) {
             book.setOwner(null);
-            bookrepository.save(book);  // сохраняем изменения
+            bookrepository.save(book);
         }
     }
 

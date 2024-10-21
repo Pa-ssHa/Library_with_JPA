@@ -23,8 +23,6 @@ public class PeopleController {
     private final PersonValidator personValidator;
     private final PersonService personService;
 
-    private final Logger logger = LoggerFactory.getLogger(PeopleController.class);
-
     @Autowired
     public PeopleController(PersonValidator personValidator, PersonService personService) {
         this.personValidator = personValidator;
@@ -34,13 +32,8 @@ public class PeopleController {
 
     @GetMapping()
     public String index(Model model) {
-        logger.info("Выводим список людей");
-        try {
-            model.addAttribute("people", personService.findAll());
-        }catch (Exception e){
-            logger.error("Ошибка при выводе списка людей");
-        }
-        logger.info("Вывод списка людей закончен");
+
+        model.addAttribute("people", personService.findAll());
         return "people/index";
     }
 
@@ -55,16 +48,10 @@ public class PeopleController {
 //        model.addAttribute("person", person);
 //        model.addAttribute("books", books);
 
-        logger.info("Вывод информации по одному человеку с id: " + id);
+        model.addAttribute("overdueBooks", personService.checkBook(id));
 
-        try {
-            model.addAttribute("person", personService.findOne(id));
-            model.addAttribute("books", personService.findBookByPerson(id));
-        }catch (Exception e){
-            logger.error("Ошибка при доступе к информации человека с id: " + id);
-        }
-
-        logger.info("Вывод информации по одному человеку с id: " + id + " закончен");
+        model.addAttribute("person", personService.findOne(id));
+        model.addAttribute("books", personService.findBookByPerson(id));
 
         return "people/show";
     }
@@ -74,7 +61,7 @@ public class PeopleController {
         return "people/new";
     }
 
-   @PostMapping
+    @PostMapping
     public String create(@ModelAttribute("person") Person person,
                          BindingResult bindingResult) {
         personValidator.validate(person, bindingResult);

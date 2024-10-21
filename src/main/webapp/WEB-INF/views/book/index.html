@@ -3,24 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title>Все книги</title>
+    <link rel="stylesheet" href="@{/styles.css}">
 </head>
 <body>
 
-<div th:each="b : ${book}">
-    <a th:href="@{/book/{id}(id=${b.getId()})}"
-       th:text="${b.title + ',  ' + b.author + ',  ' + b.year}">Book</a>
+<h1>Список книг</h1>
+
+<ul class="person-list" th:each="b : ${book}">
+    <li class="person-item">
+        <a th:href="@{/book/{id}(id=${b.getId()})}"
+           th:text="${b.title + ',  ' + b.author + ',  ' + b.year}">Book</a>
+    </li>
+</ul>
+
+<br/>
+<hr/>
+
+<div class="links">
+    <form th:method="GET" th:action="@{/book/new}">
+        <input type="submit" value="Добавить"/>
+    </form>
+
+    <br/>
+    <hr/>
+
+    <form th:method="GET" th:action="@{/book/search}">
+        <input type="submit" value="Искать книги"/>
+    </form>
+
+    <br/>
+    <hr/>
+
+    <form th:method="GET" th:action="@{/people}">
+        <input type="submit" value="Перейти к людям"/>
+    </form>
 </div>
-
-<br/>
-<hr/>
-
-<a th:href="@{/book/new}">Добавить книгу</a>
-
-<br/>
-<hr/>
-<br/>
-<hr/>
-<a th:href="@{/people}">Перейти к людям</a>
 
 </body>
 </html>

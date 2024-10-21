@@ -75,7 +75,7 @@ public class Person {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", birthYear=" + birthYear +
-                ", books=" + books +
+//                ", books=" + books +
                 '}';
     }
 }

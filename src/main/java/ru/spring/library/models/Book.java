@@ -3,6 +3,10 @@ package ru.spring.library.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Objects;
+
 @Entity
 @Table(name = "book")
 public class Book {
@@ -19,6 +23,11 @@ public class Book {
     private String author;
     @Column(name = "year")
     private int year;
+
+    @Column(name = "starttime")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date startTime;
+
 
     @ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id")
@@ -74,6 +83,15 @@ public class Book {
         this.year = year;
     }
 
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+
     @Override
     public String toString() {
         return "Book{" +
@@ -81,7 +99,28 @@ public class Book {
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", year=" + year +
-                ", owner=" + owner +
+//                ", owner=" + owner +
                 '}';
     }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Book)) return false;
+        Book book = (Book) o;
+        return Objects.equals(title, book.title) &&
+                Objects.equals(author, book.author) &&
+                Objects.equals(year, book.year);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, author, year);
+    }
+
+    public final static Comparator<Book> sortByYear = new Comparator<Book>() {
+        @Override
+        public int compare(Book o1, Book o2) {
+            return o1.getYear()- o2.getYear();
+        }
+};
 }

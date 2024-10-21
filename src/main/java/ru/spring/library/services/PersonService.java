@@ -10,8 +10,13 @@ import ru.spring.library.models.Book;
 import ru.spring.library.models.Person;
 import ru.spring.library.repositories.PeopleRepository;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional(readOnly = true)
@@ -35,6 +40,67 @@ public class PersonService {
         Optional<Person> foundPerson =peopleRepository.findById(id);
 
         return foundPerson.orElse(null);
+    }
+
+
+    /*public List<Book> checkBook(int id) {
+        Optional<Person> person = peopleRepository.findById(id);
+        if (person.isPresent()) {
+            List<Book> books = person.get().getBooks();
+            List<Book> overdueBooks = new ArrayList<>();
+
+            LocalDateTime now = LocalDateTime.now();
+
+            for (Book book : books) {
+                if (book.getStartTime() != null) {
+                    LocalDateTime startTime = book.getStartTime().toInstant()
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDateTime();
+
+
+                    long daysBetween = Duration.between(startTime, now).toDays();
+
+                    if (daysBetween >= 10) {
+                        overdueBooks.add(book);
+                    }
+                }
+            }
+            return overdueBooks; // Возвращаем список просроченных книг
+        }
+        return new ArrayList<>();
+    }*/
+
+    public List<Book> checkBook(int id) {
+        // Находим человека по id
+        Optional<Person> person = peopleRepository.findById(id);
+
+        // Если человек не найден, возвращаем пустой список
+        if (!person.isPresent()) {
+            return List.of(); // Возвращаем пустой список
+        }
+
+        // Получаем список книг, которые у человека
+        List<Book> books = person.get().getBooks();
+
+        // Инициализируем список для просроченных книг
+        List<Book> overdueBooks = new ArrayList<>();
+
+        // Проверяем каждую книгу
+        for (Book book : books) {
+//            System.out.println(book.toString());
+            if (book.getStartTime() != null) {
+                long daysBetween = TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - book.getStartTime().getTime());
+//                System.out.println(book.getStartTime().getTime());
+//                System.out.println(System.currentTimeMillis());
+//                System.out.println(daysBetween);
+                if (daysBetween >= 10) {
+                    overdueBooks.add(book); // Добавляем книгу в список просроченных
+                }
+            }
+        }
+//        System.out.println(overdueBooks);
+
+        return overdueBooks; // Возвращаем список просроченных книг
     }
 
     @Transactional
