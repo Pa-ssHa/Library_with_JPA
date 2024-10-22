@@ -3,52 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <title>Человек</title>
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+
 </head>
 <body>
 
-<p> Имя: <span th:text="${person.getName()}">VALUE</span></p>
 
-<p> Год рождения: <span th:text="${person.getBirthYear()}">VALUE</span></p>
+<ul class="person-list">
+    <li class="person-item">
+        <p> Имя: <span th:text="${person.getName()}">VALUE</span></p>
+
+        <p> Год рождения: <span th:text="${person.getBirthYear()}">VALUE</span></p>
+    </li>
+</ul>
+
+<ul class="person-list">
+    <li class="person-item">
+        <div th:if="${books.isEmpty()}">
+            <p>Человек пока не взял ни одной книги</p>
+            <hr/>
+        </div>
 
 
-<div th:if="${books.isEmpty()}">
-    <p>Человек пока не взял ни одной книги</p>
-    <hr/>
-</div>
+        <div th:if="${!books.isEmpty()}">
+            <hr/>
+            <b>Книги:</b>
+            <br/>
+            <table>
+                <tr th:each="book : ${books}"
+                    th:style="${#lists.contains(overdueBooks, book) ? 'color: red;' : 'color: black;'}">
+                    <td th:text="${book.getTitle() + '; '}"></td>
+                    <td th:text="${book.getAuthor() + '; '}"></td>
+                    <td th:text="${book.getYear()}"></td>
+                </tr>
+            </table>
+            <hr/>
+        </div>
+    </li>
+</ul>
 
-
-<div th:if="${!books.isEmpty()}">
-    <hr/>
-    <b>Книги:</b>
+<div class="links">
     <br/>
-    <table>
-        <tr th:each="book : ${books}"
-            th:style="${#lists.contains(overdueBooks, book) ? 'color: red;' : 'color: black;'}">
-            <td th:text="${book.getTitle() + '; '}"></td>
-            <td th:text="${book.getAuthor() + '; '}"></td>
-            <td th:text="${book.getYear()}"></td>
-        </tr>
-    </table>
     <hr/>
+    <form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
+        <input type="submit" value="Редактировать"/>
+    </form>
+    <!--<a th:href="@{/people/{id}/edit(id=${person.getId()})}">Edit</a>-->
+
+    <br/>
+    <br/>
+    <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
+        <input type="submit" value="Удалить"/>
+    </form>
+
+    <br/>
+    <br/>
+    <!--<a th:href="@{/people}">Вернуться в меню</a>-->
+
+
+    <form th:method="GET" th:action="@{/people}">
+        <input type="submit" value="Вернуться в меню"/>
+    </form>
 </div>
-
-
-<br/>
-<hr/>
-<form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
-    <input type="submit" value="Редактировать"/>
-</form>
-<!--<a th:href="@{/people/{id}/edit(id=${person.getId()})}">Edit</a>-->
-
-<br/>
-<br/>
-<form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
-    <input type="submit" value="Удалить"/>
-</form>
-
-<br/>
-<br/>
-<a th:href="@{/people}">Вернуться в меню</a>
 
 
 </body>

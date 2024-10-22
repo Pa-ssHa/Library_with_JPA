@@ -1,10 +1,10 @@
 /* styles.css */
 body {
     font-family: Arial, sans-serif;
-    background-image: url("/background.png"); /* Укажите путь к вашему фоновому изображению */
+    background-image: url("background.jpg"); /* Укажите путь к вашему фоновому изображению */
     background-size: cover; /* Чтобы изображение занимало весь фон */
     background-position: center; /* Центрирование изображения */
-    color: white; /* Цвет текста */
+    color: #c02d2d; /* Цвет текста */
     margin: 0;
     padding: 20px;
 }
@@ -13,11 +13,12 @@ h1 {
     color: #fff; /* Цвет заголовка */
 }
 .person-list {
+    color: black;
     list-style-type: none;
     padding: 0;
 }
 .person-item {
-    background: rgba(210, 173, 26, 0.8); /* Полупрозрачный фон для элементов списка */
+    background: rgba(24, 56, 138, 0.8); /* Полупрозрачный фон для элементов списка */
     margin: 10px 0;
     padding: 15px;
     border-radius: 5px;
@@ -43,5 +44,9 @@ h1 {
 }
 
 .links input[type="submit"]:hover {
-    background-color: #0cc13e !important; /* Цвет при наведении */
+    background-color: #885a1d !important; /* Цвет при наведении */
 }
+
+/*div{*/
+/*    color: #0cc13e;*/
+/*}*/
